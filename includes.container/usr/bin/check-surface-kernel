@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Check if the system is running the Surface kernel
+if uname -r | grep -q "surface"; then
+    echo "SUCCESS: System is running the Surface kernel"
+else
+    echo "WARNING: System is NOT running the Surface kernel"
+    echo "Current kernel: $(uname -r)"
+    echo "Please reboot and select the Surface kernel from the boot menu"
+fi

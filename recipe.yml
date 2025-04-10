@@ -1,5 +1,5 @@
-name: Vanilla Desktop Nvidia
-id: nvidia
+name: Vanilla Desktop Nvidia Surface
+id: nvidia-surface
 stages:
 - id: build
   base: ghcr.io/vanilla-os/desktop:dev
@@ -19,7 +19,14 @@ stages:
     - lpkg --unlock
     - apt-get update
 
-  - name: install-nvidia
+  - name: setup-surface-repo
+    type: shell
+    commands:
+      - wget -O /etc/apt/sources.list.d/linux-surface.list https://pkg.surfacelinux.com/debian/linux-surface.list
+      - wget -O /etc/apt/trusted.gpg.d/linux-surface.gpg https://pkg.surfacelinux.com/debian/linux-surface.gpg
+      - apt-get update
+
+  - name: install-nvidia-and-surface
     type: apt
     source:
       packages:
@@ -28,6 +35,11 @@ stages:
       - nvidia-settings
       - nvidia-smi
       - firmware-misc-nonfree
+      - linux-image-surface
+      - linux-headers-surface
+      - linux-libc-dev-surface
+      - iptsd
+      - libwacom-surface
 
   - name: nvidia-sysd-units
     type: shell
@@ -43,6 +55,8 @@ stages:
     source:
       packages:
       - switcheroo-control
+      - surface-dtx-daemon
+      - surface-control
 
   - name: vanilla-tools
     type: shell
